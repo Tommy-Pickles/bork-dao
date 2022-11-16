@@ -17,11 +17,21 @@ export default function Home() {
           "flex-grow",
           "text-white",
           "flex",
-          "justify-center",
+          "flex-col",
           "items-center"
         )}
       >
-        <ConnectButton />
+        <div
+          className={css(
+            "flex",
+            "justify-center",
+            "items-center",
+            "flex-grow",
+            "max-w-2xl"
+          )}
+        >
+          <ConnectButton />
+        </div>
       </div>
     </>
   );
