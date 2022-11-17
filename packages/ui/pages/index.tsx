@@ -16,13 +16,29 @@ import { targetChain } from "../services/wagmi";
 const contractAddress = "0xe64E4F0a5bDfde49c6b1AfcCC0e6Acdbd14330d4";
 const lotteryAbi = require("../services/contracts/raffle_abi.json");
 
-const useLotteryContractRead = (functionName: string, args?: any[]): any =>
-  useContractRead({
+const tokenImageNames = [
+  "/images/4.png",
+  "/images/5.png",
+  "/images/6.png",
+  "/images/7.png",
+];
+
+export const useIsMounted = () => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+};
+
+const useLotteryContractRead = (functionName: string, args?: any[]): any => {
+  const isMounted = useIsMounted();
+  const read = useContractRead({
     address: contractAddress,
     abi: JSON.parse(lotteryAbi),
     functionName,
     args,
   });
+  return isMounted ? read : { data: null };
+};
 
 const useLotteryContractWrite = (functionName: string, args?: any[]): any => {
   const { config } = usePrepareContractWrite({
@@ -34,10 +50,9 @@ const useLotteryContractWrite = (functionName: string, args?: any[]): any => {
   return useContractWrite(config);
 };
 
-export default function Home() {
-  const [treasuryBalance, setTreasuryBalance] = useState(1000000);
+const Timer = () => {
   const [timer, setTimer] = useState(60);
-  const [amountToBuy, setAmountToBuy] = useState("0");
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer === 0) {
@@ -50,25 +65,29 @@ export default function Home() {
       clearInterval(interval);
     };
   }, [timer, setTimer]);
+  return (
+    <div className={css("text-2xl", "font-bold", "text-black")}>{timer}s</div>
+  );
+};
+
+export default function Home() {
+  const [treasuryBalance, setTreasuryBalance] = useState(1000000);
+  const [amountToBuy, setAmountToBuy] = useState("0");
+  const [selectedTokenIndex, setSelectedTokenIndex] = useState(0);
 
   const { address } = useAccount();
   const { chain } = useNetwork();
   const isConnectedToTargetChain = chain?.id === targetChain.id;
 
   const { write } = useLotteryContractWrite("buy_tickets", [amountToBuy]);
-
   const { data: poolTotal } = useLotteryContractRead("poolTotal");
   const { data: poolStake } = useLotteryContractRead("poolStake", [address]);
   const { data: roundCount } = useLotteryContractRead("roundCount");
-  const { data: roundStart } = useLotteryContractRead("roundStart");
-  const { data: roundEnd } = useLotteryContractRead("roundEnd");
 
   console.log(
     poolTotal?.toNumber(),
     poolStake?.toNumber(),
-    roundCount?.toNumber(),
-    roundStart?.toNumber(),
-    roundEnd?.toNumber()
+    roundCount?.toNumber()
   );
 
   return (
@@ -172,11 +191,11 @@ export default function Home() {
                 )}
               >
                 <Image
-                  src={"/images/4.png"}
+                  src={tokenImageNames[selectedTokenIndex]}
                   layout={"responsive"}
                   width={274}
                   height={242}
-                  alt={"Safari Hat Doge"}
+                  alt={"DAO Token"}
                 />
               </div>
             </div>
@@ -192,7 +211,7 @@ export default function Home() {
                 </div>
               </div>
               <div className={css("text-5xl", "font-bold", "mt-4")}>
-                Bork DAO Token #1
+                Bork DAO Token #{selectedTokenIndex + 1}
               </div>
               <div
                 className={css("grid", "grid-cols-3", "mt-4", "text-tertiary")}
@@ -206,9 +225,7 @@ export default function Home() {
                 <div className={css("text-2xl", "font-bold", "text-black")}>
                   {poolTotal?.toNumber()}
                 </div>
-                <div className={css("text-2xl", "font-bold", "text-black")}>
-                  {timer}s
-                </div>
+                <Timer />
               </div>
               <div
                 className={css(
@@ -241,7 +258,9 @@ export default function Home() {
                 />
                 <Button
                   disabled={
-                    !isConnectedToTargetChain || Number(amountToBuy) <= 0
+                    !isConnectedToTargetChain ||
+                    Number(amountToBuy) <= 0 ||
+                    timer === 0
                   }
                   onClick={() => write()}
                 >
