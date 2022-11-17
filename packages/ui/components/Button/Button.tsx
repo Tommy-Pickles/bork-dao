@@ -12,6 +12,7 @@ import { abbreviate } from "../../helpers/strings";
 interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
+  className?: string;
 }
 
 const activeStyles = css(
@@ -38,11 +39,12 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
   children,
   disabled,
+  className,
 }) => {
   return (
     <button
       disabled={disabled}
-      className={css(baseButtonStyles, hoverStyles, {
+      className={css(baseButtonStyles, hoverStyles, className, {
         [disabledStyles]: disabled,
         [activeStyles]: !disabled,
       })}
@@ -53,7 +55,9 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   );
 };
 
-export const ConnectButton: React.FC<PropsWithChildren<any>> = () => {
+export const ConnectButton: React.FC<PropsWithChildren<ButtonProps>> = ({
+  ...rest
+}) => {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
   const { data: ens, isError, isLoading } = useEnsName({ address });
@@ -75,7 +79,11 @@ export const ConnectButton: React.FC<PropsWithChildren<any>> = () => {
             >
               {(() => {
                 if (!mounted || !account || !chain) {
-                  return <Button onClick={openConnectModal}>connect</Button>;
+                  return (
+                    <Button {...rest} onClick={openConnectModal}>
+                      connect
+                    </Button>
+                  );
                 }
 
                 if (chain.unsupported) {
@@ -85,10 +93,14 @@ export const ConnectButton: React.FC<PropsWithChildren<any>> = () => {
                 }
 
                 return (
-                  <Button onClick={disconnect}>
-                    <div>disconnect</div>
-                    <div className={css("text-xs", "text-pink-300")}>
+                  <Button {...rest} onClick={disconnect}>
+                    <div className={css("text-sm", "text-black")}>
                       {ens ? ens : abbreviate(account.address, 4)}
+                    </div>
+                    <div
+                      className={css("text-xs", "text-tertiary", "font-normal")}
+                    >
+                      disconnect
                     </div>
                   </Button>
                 );

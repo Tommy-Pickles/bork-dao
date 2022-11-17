@@ -1,7 +1,8 @@
 import Head from "next/head";
+import Image from "next/image";
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import Button, { IconButton } from "../components/Button/Button";
+import Button, { ConnectButton, IconButton } from "../components/Button/Button";
 import css from "../helpers/css";
 
 export default function Home() {
@@ -70,20 +71,36 @@ export default function Home() {
               >
                 <Button>Socials</Button>
               </a>
+              <ConnectButton
+                className={css(
+                  "bg-white",
+                  "hover:bg-yellow-400",
+                  "hover:border-yellow-200",
+                  "hover:text-white"
+                )}
+              />
             </div>
           </div>
         </nav>
 
-        <main
-          className={css("flex-grow", "flex", "justify-center", "bg-primary")}
-        >
+        <div className={css("flex", "justify-center", "bg-primary", "py-12")}>
           <div className={css("max-w-5xl", "w-full", "flex", "mt-20")}>
-            <div className={css("flex-1")}>asdf</div>
+            <div className={css("flex-1")}>
+              <div className={css("max-w-[450px]", "relative", "-bottom-12")}>
+                <Image
+                  src={"/images/safari-hat.png"}
+                  layout={"responsive"}
+                  width={274}
+                  height={242}
+                  alt={"Safari Hat Doge"}
+                />
+              </div>
+            </div>
 
             <div className={css("flex-1", "flex", "flex-col")}>
               <div className={css("flex", "gap-3")}>
-                <IconButton icon={"arrow-left"} />
-                <IconButton icon={"arrow-right"} disabled />
+                <IconButton icon={"arrow-left"} disabled />
+                <IconButton icon={"arrow-right"} />
                 <div className={css("font-bold", "text-tertiary")}>
                   {new Date().toDateString()}
                 </div>
@@ -130,7 +147,38 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </main>
+        </div>
+        <div
+          className={css(
+            "flex",
+            "flex-col",
+            "items-center",
+            "flex-grow",
+            "justify-between",
+            "pt-12",
+            "pb-6"
+          )}
+        >
+          <div className={css("max-w-5xl", "bg-white", "w-full")}>
+            <div className={css("text-4xl", "font-bold", "text-center")}>
+              Much DOGE Very DAO
+            </div>
+            <div className={css("mt-8", "text-2xl")}>
+              An experimental attempt to form a DAO around wDOGE and bootstrap a
+              treasury to expand the use cases of DOGE on the Ethereum Network
+            </div>
+            <div className={css("mt-8", "text-2xl")}>
+              Bord DAO is a public good DAO that gives members exclusive
+              benefits such as access to a private discord server and voting in
+              treasiry protocols. The DAO is funded by the sale of entry.
+            </div>
+          </div>
+          <div className={css("flex", "gap-8")}>
+            <a>Twitter</a>
+            <a>Etherscan</a>
+            <a>Forums</a>
+          </div>
+        </div>
       </div>
     </>
   );
