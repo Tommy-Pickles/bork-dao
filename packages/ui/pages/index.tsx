@@ -71,14 +71,7 @@ export default function Home() {
               >
                 <Button>Socials</Button>
               </a>
-              <ConnectButton
-                className={css(
-                  "bg-white",
-                  "hover:bg-yellow-400",
-                  "hover:border-yellow-200",
-                  "hover:text-white"
-                )}
-              />
+              <ConnectButton />
             </div>
           </div>
         </nav>
@@ -124,7 +117,17 @@ export default function Home() {
                   18h 11m 6s
                 </div>
               </div>
-              <div className={css("flex", "items-center", "gap-1", "mt-3")}>
+              <div
+                className={css(
+                  "flex",
+                  "items-center",
+                  "gap-1",
+                  "mt-3",
+                  "text-tertiary",
+                  "hover:text-black",
+                  "cursor-pointer"
+                )}
+              >
                 <div>
                   <IoInformationCircleOutline />
                 </div>
@@ -174,9 +177,30 @@ export default function Home() {
             </div>
           </div>
           <div className={css("flex", "gap-8")}>
-            <a>Twitter</a>
-            <a>Etherscan</a>
-            <a>Forums</a>
+            <a
+              className={css("text-tertiary", "hover:text-black")}
+              href={"https://twitter.com"}
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              Twitter
+            </a>
+            <a
+              className={css("text-tertiary", "hover:text-black")}
+              href={"https://twitter.com"}
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              Etherscan
+            </a>
+            <a
+              className={css("text-tertiary", "hover:text-black")}
+              href={"https://twitter.com"}
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              Forums
+            </a>
           </div>
         </div>
       </div>

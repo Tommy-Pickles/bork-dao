@@ -55,9 +55,7 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   );
 };
 
-export const ConnectButton: React.FC<PropsWithChildren<ButtonProps>> = ({
-  ...rest
-}) => {
+export const ConnectButton: React.FC<PropsWithChildren<{}>> = ({}) => {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
   const { data: ens, isError, isLoading } = useEnsName({ address });
@@ -80,7 +78,14 @@ export const ConnectButton: React.FC<PropsWithChildren<ButtonProps>> = ({
               {(() => {
                 if (!mounted || !account || !chain) {
                   return (
-                    <Button {...rest} onClick={openConnectModal}>
+                    <Button
+                      className={css(
+                        "hover:bg-yellow-300",
+                        "hover:border-yellow-600",
+                        "hover:text-yellow-600"
+                      )}
+                      onClick={openConnectModal}
+                    >
                       connect
                     </Button>
                   );
@@ -88,12 +93,28 @@ export const ConnectButton: React.FC<PropsWithChildren<ButtonProps>> = ({
 
                 if (chain.unsupported) {
                   return (
-                    <Button onClick={openChainModal}>Wrong network</Button>
+                    <Button
+                      className={css(
+                        "hover:bg-emerald-300",
+                        "hover:border-emerald-600",
+                        "hover:text-emerald-600"
+                      )}
+                      onClick={openChainModal}
+                    >
+                      Wrong network
+                    </Button>
                   );
                 }
 
                 return (
-                  <Button {...rest} onClick={disconnect}>
+                  <Button
+                    className={css(
+                      "hover:bg-red-300",
+                      "hover:border-red-600",
+                      "hover:text-red-600"
+                    )}
+                    onClick={disconnect}
+                  >
                     <div className={css("text-sm", "text-black")}>
                       {ens ? ens : abbreviate(account.address, 4)}
                     </div>
