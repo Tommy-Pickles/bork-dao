@@ -2,11 +2,23 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { useContractRead } from "wagmi";
 import Button, { ConnectButton, IconButton } from "../components/Button/Button";
 import css from "../helpers/css";
 
+const lotteryAbi = require("../services/contracts/raffle_abi.json");
 export default function Home() {
   const [treasuryBalance, setTreasuryBalance] = useState(10);
+  const { data: bene } = useContractRead({
+    address: "0xbc5b2c08e8ede9c9fff5c077abff12fcb89483e2",
+    abi: lotteryAbi,
+    functionName: "beneficiary",
+  });
+  const { data: nextTokenAddr } = useContractRead({
+    address: "0xbc5b2c08e8ede9c9fff5c077abff12fcb89483e2",
+    abi: lotteryAbi,
+    functionName: "nextTokenAddr",
+  });
   return (
     <>
       <Head>
