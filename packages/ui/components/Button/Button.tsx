@@ -1,28 +1,51 @@
 import { ConnectButton as RainbowConnectButton } from "@rainbow-me/rainbowkit";
 import { PropsWithChildren } from "react";
+import { IconType } from "react-icons";
+import {
+  BsFillArrowLeftCircleFill,
+  BsFillArrowRightCircleFill,
+} from "react-icons/bs";
 import { useAccount, useDisconnect, useEnsName } from "wagmi";
 import css from "../../helpers/css";
 import { abbreviate } from "../../helpers/strings";
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
+  disabled?: boolean;
 }
+
+const activeStyles = css(
+  "active:translate-x-[2px]",
+  "active:translate-y-[2px]"
+);
+const hoverStyles = css("hover:bg-white");
+const disabledStyles = css(
+  "disabled:bg-tertiary",
+  "text-white",
+  "border-tertiary"
+);
+const baseButtonStyles = css(
+  "border-[1px]",
+  "border-secondary",
+  "bg-primary",
+  "p-2",
+  "rounded-lg",
+  "text-black",
+  "font-bold"
+);
 
 const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
   children,
+  disabled,
 }) => {
   return (
     <button
-      className={css(
-        "border-2",
-        "border-pink-300",
-        "bg-pink-800",
-        "p-2",
-        "rounded-md",
-        "active:translate-x-1",
-        "active:translate-y-1"
-      )}
+      disabled={disabled}
+      className={css(baseButtonStyles, hoverStyles, {
+        [disabledStyles]: disabled,
+        [activeStyles]: !disabled,
+      })}
       onClick={onClick}
     >
       {children}
@@ -75,6 +98,31 @@ export const ConnectButton: React.FC<PropsWithChildren<any>> = () => {
         }}
       </RainbowConnectButton.Custom>
     </>
+  );
+};
+
+type IconName = "arrow-left" | "arrow-right";
+interface IconButtonProps extends ButtonProps {
+  icon: IconName;
+}
+
+const iconNameToIconMap: { [key in IconName]: IconType } = {
+  "arrow-left": BsFillArrowLeftCircleFill,
+  "arrow-right": BsFillArrowRightCircleFill,
+};
+
+export const IconButton: React.FC<IconButtonProps> = ({ icon, ...rest }) => {
+  const Component = iconNameToIconMap[icon];
+  return (
+    <button
+      className={css("bg-white", "text-tertiary", "rounded-full", "h-fit", {
+        ["text-secondary"]: rest.disabled,
+        [activeStyles]: !rest.disabled,
+      })}
+      {...rest}
+    >
+      <Component size={24} />
+    </button>
   );
 };
 

@@ -6,7 +6,16 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        ComicNeue: ['Comic Neue']
+      },
+      colors: {
+        "primary": "#e1d7d5",
+        "secondary": "#CFBDBA",
+        "tertiary": "#8f7e7c"
+      }
+    },
   },
   plugins: [],
 }
