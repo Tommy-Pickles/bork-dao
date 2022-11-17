@@ -40,7 +40,7 @@ const useLotteryContractRead = (functionName: string, args?: any[]): any => {
     functionName,
     args,
   });
-  return isMounted ? read : { data: null };
+  return isMounted ? read : {};
 };
 
 const useLotteryContractWrite = (functionName: string, args?: any[]): any => {
@@ -75,28 +75,37 @@ const Timer = () => {
 
 export default function Home() {
   const [treasuryBalance, setTreasuryBalance] = useState(1000000);
-  const [amountToBuy, setAmountToBuy] = useState("0");
+  const [amountToBuy, setAmountToBuy] = useState("");
   const [selectedTokenIndex, setSelectedTokenIndex] = useState(0);
+  const [isTxSuccessful, setIsTxSuccessful] = useState(false);
 
   const { address } = useAccount();
   const { chain } = useNetwork();
   const isConnectedToTargetChain = chain?.id === targetChain.id;
 
+  const { data: poolTotal, refetchPool } = useLotteryContractRead("poolTotal");
+  const { data: poolStake, refetch: refetchStake } = useLotteryContractRead(
+    "poolStake",
+    [address]
+  );
+
   const {
     write,
-    isLoading: isWriteLoading,
     data: contractData,
+    isLoading: isWriteLoading,
   } = useLotteryContractWrite("buy_tickets", [amountToBuy]);
-  const {
-    data,
-    isError: isTxError,
-    isLoading: isTxLoading,
-  } = useWaitForTransaction({
+  const { isError: isTxError, isLoading: isTxLoading } = useWaitForTransaction({
     hash: contractData?.hash,
+    onSuccess(data) {
+      if (data?.status === 1) {
+        if (refetchPool) refetchPool();
+        if (refetchStake) refetchStake();
+        setIsTxSuccessful(true);
+      } else {
+        console.error("tx errored out", data);
+      }
+    },
   });
-
-  const { data: poolTotal } = useLotteryContractRead("poolTotal");
-  const { data: poolStake } = useLotteryContractRead("poolStake", [address]);
 
   return (
     <>
@@ -212,8 +221,16 @@ export default function Home() {
               className={css("flex-1", "flex", "flex-col", "mt-8", "md:mt-0")}
             >
               <div className={css("flex", "gap-3")}>
-                <IconButton icon={"arrow-left"} disabled />
-                <IconButton icon={"arrow-right"} />
+                <IconButton
+                  icon={"arrow-left"}
+                  disabled={selectedTokenIndex === 0}
+                  onClick={() => setSelectedTokenIndex(selectedTokenIndex - 1)}
+                />
+                <IconButton
+                  icon={"arrow-right"}
+                  disabled={selectedTokenIndex === tokenImageNames.length - 1}
+                  onClick={() => setSelectedTokenIndex(selectedTokenIndex + 1)}
+                />
                 <div className={css("font-bold", "text-tertiary")}>
                   {new Date().toDateString()}
                 </div>
@@ -251,6 +268,7 @@ export default function Home() {
               </div>
               <div className={css("flex", "gap-3", "mt-1")}>
                 <input
+                  placeholder={"# tickets"}
                   onChange={(e) => setAmountToBuy(e.target.value)}
                   value={amountToBuy}
                   min={1}
@@ -261,14 +279,20 @@ export default function Home() {
                     "text-3xl",
                     "p-2",
                     "w-full",
-                    "max-w-[300px]"
+                    "max-w-[300px]",
+                    "placeholder:text-secondary"
                   )}
                 />
                 <Button
                   disabled={
-                    !isConnectedToTargetChain || Number(amountToBuy) <= 0
+                    !isConnectedToTargetChain ||
+                    Number(amountToBuy) <= 0 ||
+                    isTxLoading
                   }
-                  onClick={() => write()}
+                  onClick={() => {
+                    write();
+                    setIsTxSuccessful(false);
+                  }}
                 >
                   Buy Tickets
                 </Button>
@@ -289,6 +313,16 @@ export default function Home() {
               {isTxError && (
                 <div className={css("text-red-400", "mt-2")}>
                   error: please try signing the tx again
+                </div>
+              )}
+              {isTxSuccessful && (
+                <div className={css("text-tertiary", "mt-2")}>
+                  🎟 Tickets claimed successfully 🎟
+                </div>
+              )}
+              {isWriteLoading && (
+                <div className={css("text-tertiary", "mt-2")}>
+                  ✍️ Sign the tx in your wallet ✍️
                 </div>
               )}
             </div>
