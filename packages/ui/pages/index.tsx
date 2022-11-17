@@ -43,7 +43,7 @@ export default function Home() {
               <div className={css("font-bold", "text-xl")}>Bork Dao</div>
               <div
                 className={css(
-                  "bg-primary",
+                  "bg-white",
                   "px-2.5",
                   "py-1.5",
                   "text-tertiary",
@@ -58,7 +58,9 @@ export default function Home() {
                 <span className={css("text-tertiary", "font-bold")}>
                   Treasury
                 </span>
-                <span className={css("text-black")}>Ξ {treasuryBalance}</span>
+                <span className={css("text-black")}>
+                  {treasuryBalance} wDOGE
+                </span>
               </div>
             </div>
             <div className={css("flex", "items-center", "gap-2")}>
@@ -88,12 +90,20 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className={css("flex", "justify-center", "bg-primary", "py-12")}>
+        <div
+          className={css(
+            "flex",
+            "justify-center",
+            "bg-primary",
+            "py-12",
+            "px-4"
+          )}
+        >
           <div className={css("max-w-5xl", "w-full", "flex", "mt-20")}>
             <div className={css("flex-1")}>
               <div className={css("max-w-[450px]", "relative", "-bottom-12")}>
                 <Image
-                  src={"/images/safari-hat.png"}
+                  src={"/images/4.png"}
                   layout={"responsive"}
                   width={274}
                   height={242}
@@ -111,7 +121,7 @@ export default function Home() {
                 </div>
               </div>
               <div className={css("text-5xl", "font-bold", "mt-4")}>
-                Bork DAO Token 420
+                Bork DAO Token #1
               </div>
               <div
                 className={css("grid", "grid-cols-3", "mt-4", "text-tertiary")}
@@ -120,10 +130,10 @@ export default function Home() {
                 <div>Total Tickets</div>
                 <div>Raffle ends in</div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
-                  40
+                  69
                 </div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
-                  69k
+                  400
                 </div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
                   18h 11m 6s
@@ -135,15 +145,13 @@ export default function Home() {
                   "items-center",
                   "gap-1",
                   "mt-3",
-                  "text-tertiary",
-                  "hover:text-black",
-                  "cursor-pointer"
+                  "text-tertiary"
                 )}
               >
                 <div>
                   <IoInformationCircleOutline />
                 </div>
-                <div>Help mint the next Governance Doge</div>
+                <div>Donate to win the next Governance DAO token</div>
               </div>
               <div className={css("flex", "gap-3", "mt-1")}>
                 <input
@@ -171,7 +179,8 @@ export default function Home() {
             "flex-grow",
             "justify-between",
             "pt-12",
-            "pb-6"
+            "pb-6",
+            "px-4"
           )}
         >
           <div className={css("max-w-5xl", "bg-white", "w-full")}>
@@ -179,16 +188,29 @@ export default function Home() {
               Much DOGE Very DAO
             </div>
             <div className={css("mt-8", "text-2xl")}>
-              An experimental attempt to form a DAO around wDOGE and bootstrap a
-              treasury to expand the use cases of DOGE on the Ethereum Network
+              An experimental DAO built around wDOGE with the goal of
+              bootstrapping a treasury used to expand the wDOGE ecosystem.
             </div>
             <div className={css("mt-8", "text-2xl")}>
-              Bord DAO is a public good DAO that gives members exclusive
-              benefits such as access to a private discord server and voting in
-              treasiry protocols. The DAO is funded by the sale of entry.
+              Bork DAO is a public good DAO (Decentralised Autonomous
+              Organization) that aims to expand the DOGE ecosystem by developing
+              wDOGE use cases on the Ethereum blockchain. Being a member of the
+              DAO allows users to vote on governance proposals and gains them
+              access to proposal discussions. The DAO is 100% funded by wDoge
+              donations. There are two ways to gain membership. They are
+              outlined here. Proceeds from the donations will be used to
+              bootstrap liquidity for existing DeFi protocols, fund Doge
+              developers across all chains and donate to real-life public good
+            </div>
+            <div className={css("mt-8", "text-2xl")}>
+              The DAO is 100% funded by wDoge donations. There are two ways to
+              gain membership. They are outlined here. Proceeds from the
+              donations will be used to bootstrap liquidity for existing DeFi
+              protocols, fund Doge developers across all chains and donate to
+              real-life public goods.
             </div>
           </div>
-          <div className={css("flex", "gap-8")}>
+          <div className={css("flex", "gap-8", "mt-10")}>
             <a
               className={css("text-tertiary", "hover:text-black")}
               href={"https://twitter.com"}
