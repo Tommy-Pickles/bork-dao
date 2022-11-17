@@ -1,10 +1,17 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import { useAccount, useContractRead } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+} from "wagmi";
 import Button, { ConnectButton, IconButton } from "../components/Button/Button";
 import css from "../helpers/css";
+import { targetChain } from "../services/wagmi";
 
 const contractAddress = "0xe64E4F0a5bDfde49c6b1AfcCC0e6Acdbd14330d4";
 const lotteryAbi = require("../services/contracts/raffle_abi.json");
@@ -17,10 +24,38 @@ const useLotteryContractRead = (functionName: string, args?: any[]): any =>
     args,
   });
 
+const useLotteryContractWrite = (functionName: string, args?: any[]): any => {
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: lotteryAbi,
+    functionName,
+    args,
+  });
+  return useContractWrite(config);
+};
+
 export default function Home() {
   const [treasuryBalance, setTreasuryBalance] = useState(10);
+  const [timer, setTimer] = useState(60);
+  const [amountToBuy, setAmountToBuy] = useState("0");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timer === 0) {
+        clearInterval(interval);
+      } else {
+        setTimer(timer - 1);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [timer, setTimer]);
 
   const { address } = useAccount();
+  const { chain } = useNetwork();
+  const isConnectedToTargetChain = chain?.id === targetChain.id;
+
+  const { write } = useLotteryContractWrite("buy_tickets", [amountToBuy]);
 
   const { data: poolTotal } = useLotteryContractRead("poolTotal");
   const { data: poolStake } = useLotteryContractRead("poolStake", [address]);
@@ -29,17 +64,17 @@ export default function Home() {
   const { data: roundEnd } = useLotteryContractRead("roundEnd");
 
   console.log(
-    poolTotal.toNumber(),
-    poolStake.toNumber(),
-    roundCount.toNumber(),
-    roundStart.toNumber(),
-    roundEnd.toNumber()
+    poolTotal?.toNumber(),
+    poolStake?.toNumber(),
+    roundCount?.toNumber(),
+    roundStart?.toNumber(),
+    roundEnd?.toNumber()
   );
 
   return (
     <>
       <Head>
-        <title>BorkDAO:</title>
+        <title>BorkDAO</title>
         <meta name="description" content="bork bork bork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -172,7 +207,7 @@ export default function Home() {
                   400
                 </div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
-                  18h 11m 6s
+                  {timer}s
                 </div>
               </div>
               <div
@@ -191,6 +226,8 @@ export default function Home() {
               </div>
               <div className={css("flex", "gap-3", "mt-1")}>
                 <input
+                  onChange={(e) => setAmountToBuy(e.target.value)}
+                  value={amountToBuy}
                   min={1}
                   max={10}
                   type={"number"}
@@ -202,7 +239,14 @@ export default function Home() {
                     "max-w-[300px]"
                   )}
                 />
-                <Button onClick={() => console.log("buy")}>Buy Tickets</Button>
+                <Button
+                  disabled={
+                    !isConnectedToTargetChain || Number(amountToBuy) <= 0
+                  }
+                  onClick={() => write()}
+                >
+                  Buy Tickets
+                </Button>
               </div>
             </div>
           </div>

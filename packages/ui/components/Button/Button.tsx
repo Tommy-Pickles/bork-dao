@@ -23,7 +23,8 @@ const hoverStyles = css("hover:bg-white");
 const disabledStyles = css(
   "disabled:bg-tertiary",
   "text-white",
-  "border-tertiary"
+  "border-tertiary",
+  "disabled:cursor-not-allowed"
 );
 const baseButtonStyles = css(
   "border-[1px]",
