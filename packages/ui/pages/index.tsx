@@ -2,16 +2,19 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { MoonLoader } from "react-spinners";
 import {
   useAccount,
   useContractRead,
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
 import Button, { ConnectButton, IconButton } from "../components/Button/Button";
 import css from "../helpers/css";
 import { targetChain } from "../services/wagmi";
+const theme = require("../tailwind.config");
 
 const contractAddress = "0xe64E4F0a5bDfde49c6b1AfcCC0e6Acdbd14330d4";
 const lotteryAbi = require("../services/contracts/raffle_abi.json");
@@ -79,16 +82,21 @@ export default function Home() {
   const { chain } = useNetwork();
   const isConnectedToTargetChain = chain?.id === targetChain.id;
 
-  const { write } = useLotteryContractWrite("buy_tickets", [amountToBuy]);
+  const {
+    write,
+    isLoading: isWriteLoading,
+    data: contractData,
+  } = useLotteryContractWrite("buy_tickets", [amountToBuy]);
+  const {
+    data,
+    isError: isTxError,
+    isLoading: isTxLoading,
+  } = useWaitForTransaction({
+    hash: contractData?.hash,
+  });
+
   const { data: poolTotal } = useLotteryContractRead("poolTotal");
   const { data: poolStake } = useLotteryContractRead("poolStake", [address]);
-  const { data: roundCount } = useLotteryContractRead("roundCount");
-
-  console.log(
-    poolTotal?.toNumber(),
-    poolStake?.toNumber(),
-    roundCount?.toNumber()
-  );
 
   return (
     <>
@@ -258,15 +266,31 @@ export default function Home() {
                 />
                 <Button
                   disabled={
-                    !isConnectedToTargetChain ||
-                    Number(amountToBuy) <= 0 ||
-                    timer === 0
+                    !isConnectedToTargetChain || Number(amountToBuy) <= 0
                   }
                   onClick={() => write()}
                 >
                   Buy Tickets
                 </Button>
               </div>
+              {isTxLoading && (
+                <div className={css("flex", "items-center", "gap-2", "mt-2")}>
+                  <div>
+                    <MoonLoader
+                      size={15}
+                      color={theme.theme.extend.colors.tertiary}
+                    />
+                  </div>
+                  <div className={css("text-tertiary")}>
+                    transaction confirming
+                  </div>
+                </div>
+              )}
+              {isTxError && (
+                <div className={css("text-red-400", "mt-2")}>
+                  error: please try signing the tx again
+                </div>
+              )}
             </div>
           </div>
         </div>
