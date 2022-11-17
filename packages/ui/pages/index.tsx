@@ -2,27 +2,44 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import { useContractRead } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import Button, { ConnectButton, IconButton } from "../components/Button/Button";
 import css from "../helpers/css";
 
+const contractAddress = "0xe64E4F0a5bDfde49c6b1AfcCC0e6Acdbd14330d4";
 const lotteryAbi = require("../services/contracts/raffle_abi.json");
+
+const useLotteryContractRead = (functionName: string, args?: any[]): any =>
+  useContractRead({
+    address: contractAddress,
+    abi: JSON.parse(lotteryAbi),
+    functionName,
+    args,
+  });
+
 export default function Home() {
   const [treasuryBalance, setTreasuryBalance] = useState(10);
-  const { data: bene } = useContractRead({
-    address: "0xbc5b2c08e8ede9c9fff5c077abff12fcb89483e2",
-    abi: lotteryAbi,
-    functionName: "beneficiary",
-  });
-  const { data: nextTokenAddr } = useContractRead({
-    address: "0xbc5b2c08e8ede9c9fff5c077abff12fcb89483e2",
-    abi: lotteryAbi,
-    functionName: "nextTokenAddr",
-  });
+
+  const { address } = useAccount();
+
+  const { data: poolTotal } = useLotteryContractRead("poolTotal");
+  const { data: poolStake } = useLotteryContractRead("poolStake", [address]);
+  const { data: roundCount } = useLotteryContractRead("roundCount");
+  const { data: roundStart } = useLotteryContractRead("roundStart");
+  const { data: roundEnd } = useLotteryContractRead("roundEnd");
+
+  console.log(
+    poolTotal.toNumber(),
+    poolStake.toNumber(),
+    roundCount.toNumber(),
+    roundStart.toNumber(),
+    roundEnd.toNumber()
+  );
+
   return (
     <>
       <Head>
-        <title>BorkDAO</title>
+        <title>BorkDAO:</title>
         <meta name="description" content="bork bork bork" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -99,9 +116,26 @@ export default function Home() {
             "px-4"
           )}
         >
-          <div className={css("max-w-5xl", "w-full", "flex", "mt-20")}>
+          <div
+            className={css(
+              "max-w-5xl",
+              "w-full",
+              "flex",
+              "md:flex-row",
+              "flex-col",
+              "mt-20"
+            )}
+          >
             <div className={css("flex-1")}>
-              <div className={css("max-w-[450px]", "relative", "-bottom-12")}>
+              <div
+                className={css(
+                  "max-w-[450px]",
+                  "relative",
+                  "md:-bottom-12",
+                  "m-auto",
+                  "md:m-0"
+                )}
+              >
                 <Image
                   src={"/images/4.png"}
                   layout={"responsive"}
@@ -112,7 +146,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={css("flex-1", "flex", "flex-col")}>
+            <div
+              className={css("flex-1", "flex", "flex-col", "mt-8", "md:mt-0")}
+            >
               <div className={css("flex", "gap-3")}>
                 <IconButton icon={"arrow-left"} disabled />
                 <IconButton icon={"arrow-right"} />
