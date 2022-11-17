@@ -35,7 +35,7 @@ const useLotteryContractWrite = (functionName: string, args?: any[]): any => {
 };
 
 export default function Home() {
-  const [treasuryBalance, setTreasuryBalance] = useState(10);
+  const [treasuryBalance, setTreasuryBalance] = useState(1000000);
   const [timer, setTimer] = useState(60);
   const [amountToBuy, setAmountToBuy] = useState("0");
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function Home() {
                   Treasury
                 </span>
                 <span className={css("text-black")}>
-                  {treasuryBalance} wDOGE
+                  {treasuryBalance.toLocaleString()} wDOGE
                 </span>
               </div>
             </div>
@@ -201,10 +201,10 @@ export default function Home() {
                 <div>Total Tickets</div>
                 <div>Raffle ends in</div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
-                  69
+                  {poolStake?.toNumber()}
                 </div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
-                  400
+                  {poolTotal?.toNumber()}
                 </div>
                 <div className={css("text-2xl", "font-bold", "text-black")}>
                   {timer}s
