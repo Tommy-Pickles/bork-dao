@@ -1,0 +1,159 @@
+[
+  {
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_beneficiary",
+        "type": "address"
+      },
+      {
+        "name": "_auction_start",
+        "type": "uint256"
+      },
+      {
+        "name": "_bidding_time",
+        "type": "uint256"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "stateMutability": "payable",
+    "type": "function",
+    "name": "buy_tickets",
+    "inputs": [
+      {
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [],
+    "gas": 114350
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "endAuction",
+    "inputs": [],
+    "outputs": [],
+    "gas": 80076
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "updateAuction",
+    "inputs": [],
+    "outputs": [],
+    "gas": 96980
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "beneficiary",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "gas": 2478
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "auctionStart",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 2508
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "auctionEnd",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 2538
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "highestStake",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 2568
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "poolTotal",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 2598
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "nextTokenAddr",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "gas": 24243
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "ended",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "gas": 2658
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "userPoolStake",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 2903
+  }
+]
