@@ -155,7 +155,9 @@ export default function Home() {
               <a
                 rel={"noreferrer"}
                 target={"_blank"}
-                href={"https://google.com"}
+                href={
+                  "https://bork.gitbook.io/bork-dao-documentation-1/introduction"
+                }
               >
                 <Button>Docs</Button>
               </a>
@@ -378,7 +380,9 @@ export default function Home() {
             </a>
             <a
               className={css("text-tertiary", "hover:text-black")}
-              href={"https://twitter.com"}
+              href={
+                "https://goerli.etherscan.io/address/0xe64e4f0a5bdfde49c6b1afccc0e6acdbd14330d4"
+              }
               target={"_blank"}
               rel="noreferrer"
             >
